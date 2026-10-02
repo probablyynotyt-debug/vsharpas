@@ -1,0 +1,6 @@
+{
+  "name": "V# IDE",
+  "description": "Next-generation development environment foundation for V#, an intuitive and beginner-friendly programming language.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
