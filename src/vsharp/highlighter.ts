@@ -54,6 +54,11 @@ export function highlightVSharpLine(lineText: string): HighlightToken[] {
       let str = '"';
       i++;
       while (i < lineText.length) {
+        if (lineText[i] === '\\' && i + 1 < lineText.length) {
+          str += lineText[i] + lineText[i + 1];
+          i += 2;
+          continue;
+        }
         str += lineText[i];
         if (lineText[i] === '"') {
           i++;

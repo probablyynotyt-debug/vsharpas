@@ -12,7 +12,8 @@ import {
   Maximize2, 
   Minimize2,
   FolderDot,
-  Command
+  Command,
+  BookOpen
 } from 'lucide-react';
 
 interface TopBarProps {
@@ -29,6 +30,7 @@ interface TopBarProps {
   isRunning?: boolean;
   isDebugging?: boolean;
   onOpenCommandPalette?: () => void;
+  onOpenDocs?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -45,6 +47,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   isRunning = false,
   isDebugging = false,
   onOpenCommandPalette,
+  onOpenDocs,
 }) => {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
 
@@ -86,6 +89,18 @@ export const TopBar: React.FC<TopBarProps> = ({
             ⌘P
           </kbd>
         </button>
+
+        {/* Documentation Manual Button */}
+        {onOpenDocs && (
+          <button
+            onClick={onOpenDocs}
+            title="Open V# Language Documentation Manual"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 text-[11px] text-cyan-300 hover:text-cyan-200 font-medium transition-colors cursor-pointer"
+          >
+            <BookOpen className="w-3 h-3 text-cyan-400" />
+            <span>Docs</span>
+          </button>
+        )}
       </div>
 
       {/* Zone 3: Execution & Layout Controls */}

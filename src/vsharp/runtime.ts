@@ -402,17 +402,34 @@ export class Interpreter {
             1,
             'Invalid Wait Time',
             `Wait duration must be a positive number of seconds.`,
-            'Example: wait 1 or wait 0.5'
+            'Example: wait 1 or wait(2)'
           );
+        }
+        if (ctx.isAborted()) {
+          throw createVSharpError(stmt.line, 1, 'Program Stopped', 'Execution was stopped by user.');
         }
         const ms = Math.min(secVal * 1000, 30000); // 30s cap per wait for safety
         await new Promise<void>((resolve) => {
-          const timer = setTimeout(resolve, ms);
-          if (ctx.isAborted()) {
-            clearTimeout(timer);
+          let timer: any = null;
+          let intervalCheck: any = null;
+
+          const cleanup = () => {
+            if (timer) clearTimeout(timer);
+            if (intervalCheck) clearInterval(intervalCheck);
             resolve();
-          }
+          };
+
+          timer = setTimeout(cleanup, ms);
+
+          intervalCheck = setInterval(() => {
+            if (ctx.isAborted()) {
+              cleanup();
+            }
+          }, 50);
         });
+        if (ctx.isAborted()) {
+          throw createVSharpError(stmt.line, 1, 'Program Stopped', 'Execution was stopped by user.');
+        }
         break;
       }
 

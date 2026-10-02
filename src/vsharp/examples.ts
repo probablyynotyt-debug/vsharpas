@@ -251,7 +251,37 @@ make calculate_bonus level gold
 end
 `;
 
+export const MATH_AND_TEXT_CODE = `say "hello!"
+
+wait(2)
+
+say "whats apple + orange?"
+
+wait(5)
+
+set apple = 2
+set orange = 5
+set peach = 231
+
+say apple + orange
+
+wait(2)
+
+say "nice! now whats apple x orange?"
+
+wait(2)
+
+say apple * orange
+`;
+
 export const EXAMPLES: VSharpExample[] = [
+  {
+    id: 'math-and-text',
+    name: 'math_and_text.v',
+    title: 'Text vs Math Expressions',
+    description: 'Demonstrates literal text vs real operators, wait timers, and calculations.',
+    code: MATH_AND_TEXT_CODE,
+  },
   {
     id: 'modular-hero',
     name: 'main.v',

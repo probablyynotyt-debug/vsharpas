@@ -8,6 +8,7 @@ import { Console } from './components/Console';
 import { RightPanel } from './components/RightPanel';
 import { StatusBar } from './components/StatusBar';
 import { SettingsModal } from './components/SettingsModal';
+import { DocsModal } from './components/DocsModal';
 import { CommandPalette, CommandItem } from './components/CommandPalette';
 import { FilePlus } from 'lucide-react';
 import { VSharpLogo } from './components/VSharpLogo';
@@ -24,6 +25,7 @@ import {
   MODULAR_MAIN_CODE,
   GAME_TOOLS_CODE,
   MATH_TOOLS_CODE,
+  MATH_AND_TEXT_CODE,
   TREASURE_QUEST_CODE, 
   GUESS_THE_NUMBER_CODE,
   VSharpExample 
@@ -39,19 +41,20 @@ export default function App() {
 
   // Multi-File Project State
   const [files, setFiles] = useState<Record<string, string>>({
+    'math_and_text.v': MATH_AND_TEXT_CODE,
     'main.v': MODULAR_MAIN_CODE,
     'gameTools.v': GAME_TOOLS_CODE,
     'mathTools.v': MATH_TOOLS_CODE,
     'treasure_quest.v#': TREASURE_QUEST_CODE,
     'guess_number.v#': GUESS_THE_NUMBER_CODE,
   });
-  const [entryFile, setEntryFile] = useState<string>('main.v');
+  const [entryFile, setEntryFile] = useState<string>('math_and_text.v');
   const [openTabNames, setOpenTabNames] = useState<string[]>([
+    'math_and_text.v',
     'main.v',
     'gameTools.v',
-    'mathTools.v',
   ]);
-  const [activeFileName, setActiveFileName] = useState<string>('main.v');
+  const [activeFileName, setActiveFileName] = useState<string>('math_and_text.v');
 
   // Real-time cursor coordinates
   const [cursor, setCursor] = useState<{ line: number; col: number }>({ line: 1, col: 1 });
@@ -75,6 +78,7 @@ export default function App() {
 
   // Settings & Command Palette State
   const [settingsModalOpen, setSettingsModalOpen] = useState<boolean>(false);
+  const [docsModalOpen, setDocsModalOpen] = useState<boolean>(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState<boolean>(false);
   const [settings, setSettings] = useState({
     theme: 'dark' as 'dark' | 'light',
@@ -466,6 +470,12 @@ export default function App() {
         setCommandPaletteOpen((prev) => !prev);
         return;
       }
+      // F1: Open Language Documentation
+      if (e.key === 'F1') {
+        e.preventDefault();
+        setDocsModalOpen(true);
+        return;
+      }
       // Run: Ctrl+Enter or Cmd+Enter
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
@@ -573,6 +583,13 @@ export default function App() {
       action: handleClearConsole,
     },
     {
+      id: 'cmd-docs',
+      title: 'V#: Open Language Documentation & Manual',
+      shortcut: 'F1',
+      icon: <span className="text-cyan-400">📖</span>,
+      action: () => setDocsModalOpen(true),
+    },
+    {
       id: 'cmd-settings',
       title: 'Preferences: Open Editor Settings',
       icon: <span className="text-cyan-400">⚙</span>,
@@ -597,6 +614,7 @@ export default function App() {
         isRunning={isRunning}
         isDebugging={isDebugging}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        onOpenDocs={() => setDocsModalOpen(true)}
       />
 
       {/* 2. Main Workbench Area */}
@@ -646,6 +664,7 @@ export default function App() {
           onInsertCode={(snippet) => {
             handleCodeChange(activeCode ? `${activeCode}\n\n${snippet}` : snippet);
           }}
+          onOpenFullManual={() => setDocsModalOpen(true)}
         />
 
         {/* Central Editor & Console Stack */}
@@ -755,6 +774,14 @@ export default function App() {
         onClose={() => setSettingsModalOpen(false)}
         settings={settings}
         onUpdateSettings={(newSet) => setSettings((prev) => ({ ...prev, ...newSet }))}
+      />
+
+      <DocsModal
+        isOpen={docsModalOpen}
+        onClose={() => setDocsModalOpen(false)}
+        onInsertCode={(snippet) => {
+          handleCodeChange(activeCode ? `${activeCode}\n\n${snippet}` : snippet);
+        }}
       />
     </div>
   );

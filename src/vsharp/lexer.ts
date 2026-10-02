@@ -169,14 +169,15 @@ export class Lexer {
             this.advance(); // Skip closing quote
             break;
           }
-          // Escape sequences: \n, \t, \"
+          // Escape sequences: \n, \t, \", \\
           if (c === '\\' && this.pos + 1 < this.source.length) {
             this.advance();
             const nextC = this.source[this.pos];
             if (nextC === 'n') strVal += '\n';
             else if (nextC === 't') strVal += '\t';
             else if (nextC === '"') strVal += '"';
-            else strVal += '\\' + nextC;
+            else if (nextC === '\\') strVal += '\\';
+            else strVal += nextC;
             this.advance();
             continue;
           }

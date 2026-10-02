@@ -38,6 +38,7 @@ interface SidebarProps {
   onSelectProblem?: (file: string, line: number) => void;
   // Docs insert snippet
   onInsertCode?: (snippet: string) => void;
+  onOpenFullManual?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -66,6 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   problems,
   onSelectProblem,
   onInsertCode,
+  onOpenFullManual,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -140,7 +142,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Documentation Tab */}
       {activeTab === 'docs' && (
-        <DocumentationPanel onInsertCode={onInsertCode} />
+        <DocumentationPanel 
+          onInsertCode={onInsertCode} 
+          onOpenFullManual={onOpenFullManual}
+        />
       )}
 
       {/* Project Search Tab */}
